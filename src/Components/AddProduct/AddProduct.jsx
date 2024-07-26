@@ -69,7 +69,7 @@ const AddProduct = () => {
         </div>
         <div className={style.addProductPrice}>
             <div className={style.itemField}>
-                <p>Preço</p>
+                <p>Preço Antigo</p>
                 <input value={productDetails.old_price} onChange={changeHandler} type="text" name='old_price' placeholder='Digite aqui' />
             </div>
             <div className={style.itemField}>
