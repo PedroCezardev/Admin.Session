@@ -28,38 +28,38 @@ const AddProduct = () => {
     const Add_product = async () => {
         console.log("Detalhes do produto antes de enviar a imagem:", productDetails);
         let responseData;
-        let product = { ...productDetails};
-
+        let product = { ...productDetails };
+      
         let formData = new FormData();
         formData.append('product', image);
-
+      
         await fetch('http://localhost:4000/upload', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+          },
+          body: formData,
+        }).then((resp) => resp.json())
+          .then((data) => { responseData = data });
+      
+        if (responseData && responseData.success) {
+                product.image = responseData.image_url;
+                console.log("Detalhes do produto após receber o URL da imagem:", product);
+      
+          await fetch('http://localhost:4000/addproduct', {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
             },
-            body: formData,
-        }).then((resp) => resp.json())
-          .then((data) => {responseData = data})
-
-        if(responseData && responseData.success){
-            product.image = responseData.image_url;
-            console.log("Detalhes do produto após receber o URL da imagem:", product);
-            
-            await fetch('http://localhost:4000/addproduct', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(product),
-            }).then((resp) => resp.json()).then((data) => {
-                data.success?alert("Produto Adicionado"):alert("Falhou")
-            })
+            body: JSON.stringify(product),
+          }).then((resp) => resp.json()).then((data) => {
+            data.success ? alert("Produto Adicionado") : alert("Falhou");
+          });
         } else {
-            console.error("Upload da Imagem Falhou:", responseData);
+          console.error("Upload da Imagem Falhou:", responseData);
         }
-    };
+      };
 
   return (
     <div className={style.addProduct}>
@@ -69,7 +69,7 @@ const AddProduct = () => {
         </div>
         <div className={style.addProductPrice}>
             <div className={style.itemField}>
-                <p>Preço</p>
+                <p>Preço Antigo</p>
                 <input value={productDetails.old_price} onChange={changeHandler} type="text" name='old_price' placeholder='Digite aqui' />
             </div>
             <div className={style.itemField}>
